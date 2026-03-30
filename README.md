@@ -3,7 +3,7 @@
 `vv128` is a 256-bit hash function on C++ based on Merkle-Damgor construction. It uses custom non-linear NADD optrations.
 `vv128` is open to analysis, hacking and playing.
 
-DO NOT USE THIS HASH ALGORITHM IN REAL CASES VIA IT'S POSSIBLE UNSAFETY
+DO NOT USE THIS HASH ALGORITHM IN REAL CASES VIA IT'S POSSIBLE UNSECURE
 
 ## 1. Algorithm
 `vv128` extends message into 256-bit. It adds padding bit (+ bit 1 and zeros) and message length in bits at the end.
@@ -17,7 +17,7 @@ This is my own custon cryptoprimitives designed as a non-linear and fast functio
 This operations performs non-linearity transformations
 
 `vv128` works with 256-bit blocks saved as 4 uint64 (block\[0]-block\[3]), 8 rounds each. Every round `vv128` uses 2 round constants that is generated with my PRNG generator. In it's state `vv128` has eight 64-bit variables (a,b,c,d,e,f,g,h). At the start they are equal to:
-```
+```c
 a = 0x6a09e667bb67ae85 ^ salt;  // π
 b = 0x3c6ef372fe94f82b ^ salt;  // e
 c = 0x9e3779b97f4a7c15 ^ salt;  // φ
@@ -47,7 +47,7 @@ for (int i of 8){
 ```
 
 And, the finalizer that constructs 256-bit hash from 512-bit inner state and message length:
-```
+```c
 ctrl = A(Ql(A(len), 0x9e3779b97f4a7c15))
 t0 = Nux(ctrl, e, f)
 t1 = Nux(ctrl, f, g)
@@ -67,5 +67,56 @@ Base structure:
 - `vv_state`: a container of current `vv128` state and pointer to block data
 
 Main functions:
-- `void vv_print_state(const vv_state*, bool)`:
+
+### `void vv_print_state(const vv_state*, bool)`
 Prints current 256-bit block and 512-bit state variables. Also prints round constants if bool parameter `print_consts` is true
+### `int vv_init_state(vv_state*, uint64_t)`
+Initializes `vv_state` with round constants and base state values. Returns 0 on success and -1 on error. `salt` parameter is used to add a salt into initialized structure; keep it zero if you don't use.
+### `int vv_extend(vv_state*, const char*, size_t)`
+Extends message to 256 bit with padding. Creates new buffer and copies message into it with padding. Returns 0 on success and -1 on error. It calls `strlen()` function if you didn't provide `len` parameter.
+### `int vv_free_state(vv_state*)`
+Deletes inner buffer and clears states and constants. Returns 0 on success and -1 on error.
+### `int vv_core(vv_state*, int)`
+Performs one round with 256-bit block. Parameter `i` states for number of round. Returns 0 on success and -1 on error.
+### `int vv_finalize(const vv_state*, uint64_t*)`
+Performs finalization and stores ready 256-bit hash into a buffer in `res` parameter. Returns 0 on success and -1 on error.
+## `int vv128(vv_state*, uint64_t*)`
+Calculates full `vv128` hash algorithm and stores ready 256-bit hash into a buffer in `res` parameter. Returns 0 on success and -1 on error. Needs `vv_extend()` and `vv_init_state()` before using.
+
+## 3. Usage
+Example of usage:
+```c
+#include "vv128.hpp"
+
+int main(){
+    vv_state state1, state2;
+    uint64_t hash1[4], hash2[4];
+
+    vv_init_state(&state1);
+    vv_init_state(&state2);
+    
+    vv_extend(&state1, "Hello, thief! My name is Alex, and my password is 0xdeadbeef, but you cant see it cause it's my own hash VV128!");
+    vv_extend(&state2, "Hello, thief! My name is alex, and my password is 0xdeadbeef, but you cant see it cause it's my own hash VV128!");
+    
+    vv128(&state1, hash1);
+    vv128(&state2, hash2);
+
+    print("Original: " << hex(hash1[0]) << hex(hash1[1]) << hex(hash1[2]) << hex(hash1[3]));
+    print("1 bit inverted: " << hex(hash2[0]) << hex(hash2[1]) << hex(hash2[2]) << hex(hash2[3]));
+
+    int dist = __builtin_popcountll(hash1[0] ^ hash2[0]) + __builtin_popcountll(hash1[1] ^ hash2[1]) + __builtin_popcountll(hash1[2] ^ hash2[2]) + __builtin_popcountll(hash1[3] ^ hash2[3]);
+    print("Hamming distance: popcnt(hash1 ^ hash2) = " << dist << " (ideal is 128)");
+
+    vv_free_state(&state1);
+    vv_free_state(&state2);
+}
+```
+Result:
+```
+Original: 2ede5e8d0261cd30107bba5a620fb9d9d0580c972e17ab63ad8462422f05992
+1 bit inverted: ee86df321923ca99222aa9ebffea5b0c50949e049645556185ee6a26764acd0
+Hamming distance: popcnt(hash1 ^ hash2) = 109 (ideal is 128)
+```
+
+Try to break it! And of course, DO NOT USE IT IN REAL CASES AS A SECURE HASH ALGORITHM
+;)
