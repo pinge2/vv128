@@ -80,7 +80,7 @@ Deletes inner buffer and clears states and constants. Returns 0 on success and -
 Performs one round with 256-bit block. Parameter `i` states for number of round. Returns 0 on success and -1 on error.
 ### `int vv_finalize(const vv_state*, uint64_t*)`
 Performs finalization and stores ready 256-bit hash into a buffer in `res` parameter. Returns 0 on success and -1 on error.
-## `int vv128(vv_state*, uint64_t*)`
+### `int vv128(vv_state*, uint64_t*)`
 Calculates full `vv128` hash algorithm and stores ready 256-bit hash into a buffer in `res` parameter. Returns 0 on success and -1 on error. Needs `vv_extend()` and `vv_init_state()` before using.
 
 ## 3. Usage
