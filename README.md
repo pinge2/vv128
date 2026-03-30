@@ -31,7 +31,7 @@ Where salt is usually zero.
 
 for every round:
 ```c
-for (int i of 12){
+for (int i of 10){
   word1 = Nux(RC[i], block0, block1) <<< i
   word2 = Nux(RC[~i], block2, block3) <<< ~i
 
