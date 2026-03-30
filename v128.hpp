@@ -308,36 +308,10 @@ int vv128(vv_state* state, uint64_t* res){
         state->block[2] = state->ext_buffer[j + 2];
         state->block[3] = state->ext_buffer[j + 3];
 
-        for (int i = 0; i < 12; ++i) vv_core(state, i);
+        for (int i = 0; i < 10; ++i) vv_core(state, i);
     }
 
     vv_finalize(state, res);
 
     return 0;
 }
-
-
-#ifdef EXAMPLE
-    int main(){
-        vv_state state1, state2;
-        uint64_t hash1[4], hash2[4];
-
-        vv_init_state(&state1);
-        vv_init_state(&state2);
-        
-        vv_extend(&state1, "Hello, thief! My name is Alex, and my password is 0xdeadbeef, but you cant see it cause it's my own hash VV128!");
-        vv_extend(&state2, "Hello, thief! My name is alex, and my password is 0xdeadbeef, but you cant see it cause it's my own hash VV128!");
-        
-        vv128(&state1, hash1);
-        vv128(&state2, hash2);
-
-        print("Original: " << hex(hash1[0]) << hex(hash1[1]) << hex(hash1[2]) << hex(hash1[3]));
-        print("1 bit inverted: " << hex(hash2[0]) << hex(hash2[1]) << hex(hash2[2]) << hex(hash2[3]));
-
-        int dist = __builtin_popcountll(hash1[0] ^ hash2[0]) + __builtin_popcountll(hash1[1] ^ hash2[1]) + __builtin_popcountll(hash1[2] ^ hash2[2]) + __builtin_popcountll(hash1[3] ^ hash2[3]);
-        print("Hamming distance: popcnt(hash1 ^ hash2) = " << dist);
-
-        vv_free_state(&state1);
-        vv_free_state(&state2);
-    }
-#endif
