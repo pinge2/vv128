@@ -18,14 +18,14 @@ This operations performs non-linearity transformations
 
 `vv128` works with 256-bit blocks saved as 4 uint64 (block\[0]-block\[3]), 8 rounds each. Every round `vv128` uses 2 round constants that is generated with my PRNG generator. In it's state `vv128` has eight 64-bit variables (a,b,c,d,e,f,g,h). At the start they are equal to:
 ```
-state->a = 0x6a09e667bb67ae85 ^ salt;  // π
-state->b = 0x3c6ef372fe94f82b ^ salt;  // e
-state->c = 0x9e3779b97f4a7c15 ^ salt;  // φ
-state->d = 0x428a2f98d728ae22 ^ salt;  // sqrt(2)
-state->e = 0x9ddfea08eb382d69 ^ salt;
-state->f = 0xfea7b9b7745c4422 ^ salt;
-state->g = 0x2bad44f21bdb6361 ^ salt;
-state->h = 0x4c9b74c7693e68e3 ^ salt;
+a = 0x6a09e667bb67ae85 ^ salt;  // π
+b = 0x3c6ef372fe94f82b ^ salt;  // e
+c = 0x9e3779b97f4a7c15 ^ salt;  // φ
+d = 0x428a2f98d728ae22 ^ salt;  // sqrt(2)
+e = 0x9ddfea08eb382d69 ^ salt;
+f = 0xfea7b9b7745c4422 ^ salt;
+g = 0x2bad44f21bdb6361 ^ salt;
+h = 0x4c9b74c7693e68e3 ^ salt;
 ```
 Where salt is usually zero.
 
