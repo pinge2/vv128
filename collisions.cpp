@@ -46,5 +46,6 @@ int main(){
     int dist = __builtin_popcountll(hash1[0] ^ hash2[0]) + __builtin_popcountll(hash1[1] ^ hash2[1]) + __builtin_popcountll(hash1[2] ^ hash2[2]) + __builtin_popcountll(hash1[3] ^ hash2[3]);
     print("Hamming distance: popcnt(hash1 ^ hash2) = " << dist);
 
+    free(buff);
     vv_free_state(&state);
 }
