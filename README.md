@@ -16,7 +16,7 @@ This is my own custon cryptoprimitives designed as a non-linear and fast functio
 
 This operations performs non-linearity transformations
 
-`vv128` works with 256-bit blocks saved as 4 uint64 (block\[0]-block\[3]), 12 rounds each. Every round `vv128` uses 2 round constants that is generated with my PRNG generator. In it's state `vv128` has eight 64-bit variables (a,b,c,d,e,f,g,h). At the start they are equal to:
+`vv128` works with 256-bit blocks saved as 4 uint64 (block\[0]-block\[3]), 10 rounds each. Every round `vv128` uses 2 round constants that is generated with my PRNG generator. In it's state `vv128` has eight 64-bit variables (a,b,c,d,e,f,g,h). At the start they are equal to:
 ```c
 a = 0x6a09e667bb67ae85 ^ salt;  // π
 b = 0x3c6ef372fe94f82b ^ salt;  // e
@@ -113,9 +113,9 @@ int main(){
 ```
 Result:
 ```
-Original: 2ede5e8d0261cd30107bba5a620fb9d9d0580c972e17ab63ad8462422f05992
-1 bit inverted: ee86df321923ca99222aa9ebffea5b0c50949e049645556185ee6a26764acd0
-Hamming distance: popcnt(hash1 ^ hash2) = 109 (ideal is 128)
+Original: 911c9bab89442dd9f80c33a36f52e7017a0c38ddd73996c79a7793608cf8522
+1 bit inverted: 1482157929b37153d3f3f1df16bc809b9b9f737144d49bf5e9aaa46345c956a4
+Hamming distance: popcnt(hash1 ^ hash2) = 134 (ideal is 128)
 ```
 
 Try to break it! And of course, DO NOT USE IT IN REAL CASES AS A SECURE HASH ALGORITHM
