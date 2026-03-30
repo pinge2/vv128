@@ -13,7 +13,7 @@ int main(){
     
     char* buff = (char*)malloc(BLOCKS * 32);
 
-    for (int i = 0; i < BLOCKS * 4; ++i) ((uint64_t*)buff)[i] = hrand2() * (i + 1);
+    for (int i = 0; i < BLOCKS * 4; ++i) ((uint64_t*)buff)[i] = hrand2();
 
     state.buffer_length = BLOCKS;
     
