@@ -2,7 +2,6 @@
 #define BLOCKS 1048576
 
 
-
 int main(){
     shrand(time(NULL));
 
