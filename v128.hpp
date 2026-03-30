@@ -308,7 +308,7 @@ int vv128(vv_state* state, uint64_t* res){
         state->block[2] = state->ext_buffer[j + 2];
         state->block[3] = state->ext_buffer[j + 3];
 
-        for (int i = 0; i < 8; ++i) vv_core(state, i);
+        for (int i = 0; i < 12; ++i) vv_core(state, i);
     }
 
     vv_finalize(state, res);
